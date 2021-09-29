@@ -78,7 +78,7 @@ public extension BioMetricAuthenticator {
         
         // authenticate
         BioMetricAuthenticator.shared.evaluate(
-            policy: .deviceOwnerAuthenticationWithBiometrics,
+            policy: .deviceOwnerAuthentication,
             with: context,
             reason: reasonString,
             completion: completion
