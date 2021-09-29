@@ -36,11 +36,14 @@ open class BioMetricAuthenticator: NSObject {
     
     // MARK: - Public
     public var allowableReuseDuration: TimeInterval = 0
+    
+    static let context = LAContext()
 }
 
 // MARK:- Public
 
 public extension BioMetricAuthenticator {
+    
     
     /// checks if biometric authentication can be performed currently on the device.
     class func canAuthenticate() -> Bool {
@@ -48,8 +51,8 @@ public extension BioMetricAuthenticator {
         var isBiometricAuthenticationAvailable = false
         var error: NSError? = nil
         
-        if LAContext().canEvaluatePolicy(
-            LAPolicy.deviceOwnerAuthenticationWithBiometrics,
+        if context.canEvaluatePolicy(
+            LAPolicy.deviceOwnerAuthentication,
             error: &error
         ) {
             isBiometricAuthenticationAvailable = (error == nil)
@@ -71,7 +74,6 @@ public extension BioMetricAuthenticator {
             : reason
         
         // context
-        let context = LAContext()
         context.touchIDAuthenticationAllowableReuseDuration = BioMetricAuthenticator.shared.allowableReuseDuration
         context.localizedFallbackTitle = fallbackTitle
         context.localizedCancelTitle = cancelTitle
@@ -97,7 +99,6 @@ public extension BioMetricAuthenticator {
             ? BioMetricAuthenticator.shared.defaultPasscodeAuthenticationReason()
             : reason
         
-        let context = LAContext()
         context.localizedCancelTitle = cancelTitle
         
         // authenticate
@@ -111,35 +112,32 @@ public extension BioMetricAuthenticator {
     
     /// checks if device supports face id and authentication can be done
     func faceIDAvailable() -> Bool {
-        let context = LAContext()
         var error: NSError?
         
-        let canEvaluate = context.canEvaluatePolicy(
-            LAPolicy.deviceOwnerAuthenticationWithBiometrics,
+        let canEvaluate = BioMetricAuthenticator.context.canEvaluatePolicy(
+            LAPolicy.deviceOwnerAuthentication,
             error: &error
         )
-        return canEvaluate && context.biometryType == .faceID
+        return canEvaluate && BioMetricAuthenticator.context.biometryType == .faceID
     }
     
     /// checks if device supports touch id and authentication can be done
     func touchIDAvailable() -> Bool {
-        let context = LAContext()
         var error: NSError?
         
-        let canEvaluate = context.canEvaluatePolicy(
-            LAPolicy.deviceOwnerAuthenticationWithBiometrics,
+        let canEvaluate = BioMetricAuthenticator.context.canEvaluatePolicy(
+            LAPolicy.deviceOwnerAuthentication,
             error: &error
         )
-        return canEvaluate && context.biometryType == .touchID
+        return canEvaluate && BioMetricAuthenticator.context.biometryType == .touchID
     }
     
     /// checks if device has faceId
     /// this is added to identify if device has faceId or touchId
     /// note: this will not check if devices can perform biometric authentication
     func isFaceIdDevice() -> Bool {
-        let context = LAContext()
-        _ = context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
-        return context.biometryType == .faceID
+        _ = BioMetricAuthenticator.context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthentication, error: nil)
+        return BioMetricAuthenticator.context.biometryType == .faceID
     }
 }
 
