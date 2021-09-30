@@ -49,7 +49,7 @@ public extension BioMetricAuthenticator {
         var error: NSError? = nil
         
         if LAContext().canEvaluatePolicy(
-            LAPolicy.deviceOwnerAuthenticationWithBiometrics,
+            LAPolicy.deviceOwnerAuthentication,
             error: &error
         ) {
             isBiometricAuthenticationAvailable = (error == nil)
@@ -115,7 +115,7 @@ public extension BioMetricAuthenticator {
         var error: NSError?
         
         let canEvaluate = context.canEvaluatePolicy(
-            LAPolicy.deviceOwnerAuthenticationWithBiometrics,
+            LAPolicy.deviceOwnerAuthentication,
             error: &error
         )
         return canEvaluate && context.biometryType == .faceID
@@ -127,7 +127,7 @@ public extension BioMetricAuthenticator {
         var error: NSError?
         
         let canEvaluate = context.canEvaluatePolicy(
-            LAPolicy.deviceOwnerAuthenticationWithBiometrics,
+            LAPolicy.deviceOwnerAuthentication,
             error: &error
         )
         return canEvaluate && context.biometryType == .touchID
@@ -138,7 +138,7 @@ public extension BioMetricAuthenticator {
     /// note: this will not check if devices can perform biometric authentication
     func isFaceIdDevice() -> Bool {
         let context = LAContext()
-        _ = context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        _ = context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthentication, error: nil)
         return context.biometryType == .faceID
     }
 }
